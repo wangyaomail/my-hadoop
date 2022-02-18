@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>cn.dendarii</groupId>
+    <artifactId>my-hadoop</artifactId>
+    <version>${my-hadoop.version}</version>
+
+    <packaging>pom</packaging>
+    <name>my-hadoop</name>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.6.3</version>
+        <relativePath/>
+    </parent>
+
+    <modules>
+        <module>hadoop-0.1</module>
+    </modules>
+
+    <properties>
+        <my-hadoop.version>1.0</my-hadoop.version>
+        <java.version>1.8</java.version>
+        <javadoc.skip>true</javadoc.skip>
+        <javasrc.skip>true</javasrc.skip>
+        <gpg.skip>true</gpg.skip>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <commons-collections4.version>4.4</commons-collections4.version>
+        <guava.version>24.0-jre</guava.version>
+        <fastjson.version>1.2.46</fastjson.version>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>localrepo</id>
+            <url>file://${user.home}/.m2/repository</url>
+        </repository>
+        <repository>
+            <id>alimaven</id>
+            <url>https://maven.aliyun.com/repository/central</url>
+        </repository>
+        <repository>
+            <id>central</id>
+            <url>https://repo1.maven.org/maven2/</url>
+        </repository>
+    </repositories>
+
+</project>
