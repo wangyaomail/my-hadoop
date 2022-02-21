@@ -35,8 +35,9 @@ import my.hadoop.io.UTF8;
 import my.hadoop.io.Writable;
 import my.hadoop.util.LogFormatter;
 
-/** A simple RPC mechanism.
- *
+/**
+ * A simple RPC mechanism.
+ * <p>
  * A <i>protocol</i> is a Java interface.  All parameters and return types must
  * be one of:
  *
@@ -49,7 +50,7 @@ import my.hadoop.util.LogFormatter;
  * <li>a {@link Writable}; or</li>
  *
  * <li>an array of the above types</li> </ul>
- *
+ * <p>
  * All methods in the protocol should throw only IOException.  No field data of
  * the protocol instance is transmitted.
  */
@@ -59,7 +60,9 @@ public class RPC {
     private RPC() {
     }                                  // no public ctor
 
-    /** A method invocation, including the method name and its parameters.*/
+    /**
+     * A method invocation, including the method name and its parameters.
+     */
     private static class Invocation implements Writable, Configurable {
         private String methodName;
         private Class[] parameterClasses;
@@ -75,17 +78,23 @@ public class RPC {
             this.parameters = parameters;
         }
 
-        /** The name of the method invoked. */
+        /**
+         * The name of the method invoked.
+         */
         public String getMethodName() {
             return methodName;
         }
 
-        /** The parameter classes. */
+        /**
+         * The parameter classes.
+         */
         public Class[] getParameterClasses() {
             return parameterClasses;
         }
 
-        /** The parameter instances. */
+        /**
+         * The parameter instances.
+         */
         public Object[] getParameters() {
             return parameters;
         }
@@ -154,15 +163,19 @@ public class RPC {
         }
     }
 
-    /** Construct a client-side proxy object that implements the named protocol,
-     * talking to a server at the named address. */
+    /**
+     * Construct a client-side proxy object that implements the named protocol,
+     * talking to a server at the named address.
+     */
     public static Object getProxy(Class protocol, InetSocketAddress addr, Configuration conf) {
         return Proxy.newProxyInstance(protocol.getClassLoader(),
                                       new Class[] { protocol },
                                       new Invoker(addr, conf));
     }
 
-    /** Expert: Make multiple, parallel calls to a set of servers. */
+    /**
+     * Expert: Make multiple, parallel calls to a set of servers.
+     */
     public static Object[] call(
             Method method, Object[][] params, InetSocketAddress[] addrs, Configuration conf)
             throws IOException {
@@ -190,14 +203,18 @@ public class RPC {
         return values;
     }
 
-    /** Construct a server for a protocol implementation instance listening on a
-     * port. */
+    /**
+     * Construct a server for a protocol implementation instance listening on a
+     * port.
+     */
     public static Server getServer(final Object instance, final int port, Configuration conf) {
         return getServer(instance, port, 1, false, conf);
     }
 
-    /** Construct a server for a protocol implementation instance listening on a
-     * port. */
+    /**
+     * Construct a server for a protocol implementation instance listening on a
+     * port.
+     */
     public static Server getServer(
             final Object instance,
             final int port,
@@ -207,27 +224,33 @@ public class RPC {
         return new Server(instance, conf, port, numHandlers, verbose);
     }
 
-    /** An RPC Server. */
+    /**
+     * An RPC Server.
+     */
     public static class Server extends my.hadoop.ipc.Server {
         private Object instance;
         private Class implementation;
         private boolean verbose;
 
-        /** Construct an RPC server.
+        /**
+         * Construct an RPC server.
+         *
          * @param instance the instance whose methods will be called
-         * @param conf the configuration to use
-         * @param port the port to listen for connections on
+         * @param conf     the configuration to use
+         * @param port     the port to listen for connections on
          */
         public Server(Object instance, Configuration conf, int port) {
             this(instance, conf, port, 1, false);
         }
 
-        /** Construct an RPC server.
-         * @param instance the instance whose methods will be called
-         * @param conf the configuration to use
-         * @param port the port to listen for connections on
+        /**
+         * Construct an RPC server.
+         *
+         * @param instance    the instance whose methods will be called
+         * @param conf        the configuration to use
+         * @param port        the port to listen for connections on
          * @param numHandlers the number of method handler threads to run
-         * @param verbose whether each call should be logged
+         * @param verbose     whether each call should be logged
          */
         public Server(
                 Object instance, Configuration conf, int port, int numHandlers, boolean verbose) {
