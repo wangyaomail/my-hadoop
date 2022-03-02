@@ -65,6 +65,6 @@
                 </includes>
             </resource>
         </resources>
-        <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
+        <sourceDirectory>src/main/java</sourceDirectory>
     </build>
 </project>

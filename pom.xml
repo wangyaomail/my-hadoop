@@ -19,6 +19,7 @@
 
     <modules>
         <module>hadoop-0.1</module>
+        <module>ch3-hdfs</module>
     </modules>
 
     <properties>
