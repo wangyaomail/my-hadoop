@@ -20,6 +20,7 @@
     <modules>
         <module>hadoop-0.1</module>
         <module>ch3-hdfs</module>
+        <module>ch4-mr</module>
     </modules>
 
     <properties>
