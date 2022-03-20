@@ -21,6 +21,7 @@
         <module>hadoop-0.1</module>
         <module>ch3-hdfs</module>
         <module>ch4-mr</module>
+        <module>ch5-yarn</module>
     </modules>
 
     <properties>
