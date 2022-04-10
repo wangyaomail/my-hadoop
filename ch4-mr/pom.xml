@@ -29,6 +29,11 @@
             <artifactId>hadoop-client</artifactId>
             <version>3.2.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

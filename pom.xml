@@ -22,6 +22,7 @@
         <module>ch3-hdfs</module>
         <module>ch4-mr</module>
         <module>ch5-yarn</module>
+        <module>exp1-nlp</module>
     </modules>
 
     <properties>
@@ -33,7 +34,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <commons-collections4.version>4.4</commons-collections4.version>
         <guava.version>24.0-jre</guava.version>
-        <fastjson.version>1.2.46</fastjson.version>
+        <fastjson.version>1.2.80</fastjson.version>
     </properties>
 
     <repositories>

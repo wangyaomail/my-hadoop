@@ -6,6 +6,9 @@ import org.apache.hadoop.yarn.client.api.YarnClient;
 import org.apache.hadoop.yarn.client.api.YarnClientApplication;
 import org.apache.hadoop.yarn.conf.YarnConfiguration;
 
+/**
+ * 打开yarn客户端
+ */
 public class ch501yarnclient {
 
     public static void main(String[] args) throws Exception {
