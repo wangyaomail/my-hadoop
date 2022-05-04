@@ -1,0 +1,11 @@
+T__0=1
+T__1=2
+T__2=3
+INT=4
+WS=5
+NAME=6
+PLUS=7
+'select * from students'=1
+'select'=2
+'from'=3
+'+'=7

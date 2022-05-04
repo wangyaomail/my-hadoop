@@ -29,10 +29,36 @@
             <artifactId>hadoop-client</artifactId>
             <version>3.2.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-runtime</artifactId>
+            <version>4.9.3</version>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr4-maven-plugin</artifactId>
+                <version>4.9.3</version>
+                <configuration>
+                    <sourceDirectory>src/main/antlr</sourceDirectory>
+                    <outputDirectory>src/main/java/antlr</outputDirectory>
+                    <visitor>true</visitor>
+                    <arguments>
+                        <argument>-package</argument>
+                        <argument>antlr</argument>
+                    </arguments>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>antlr4</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
