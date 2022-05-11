@@ -1,4 +1,4 @@
-package ch6;
+package ch7;
 
 public class HiveTest2 {
 }
