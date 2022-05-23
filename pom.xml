@@ -23,7 +23,7 @@
         <module>ch5-yarn</module>
         <module>ch6-hive</module>
         <module>ch7-hbase</module>
-        <module>exp1-nlp</module>
+        <module>exp1-wd</module>
     </modules>
 
     <properties>
