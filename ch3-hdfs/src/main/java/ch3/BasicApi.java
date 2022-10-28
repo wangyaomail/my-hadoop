@@ -5,12 +5,15 @@ import org.apache.hadoop.fs.*;
 import org.apache.hadoop.io.IOUtils;
 
 import java.io.InputStream;
+import java.net.URI;
 
 public class BasicApi {
 
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
         FileSystem fs = FileSystem.get(conf);
+//        如果我们主机名不是zzti，可以使用下面的方法，指定zzti账户进行访问
+//        FileSystem fs = FileSystem.get(URI.create("hdfs://zzti:9000"),conf,"zzti");
         {// 清空目录/test
             fs.delete(new Path("/ch3"), true);
         }
