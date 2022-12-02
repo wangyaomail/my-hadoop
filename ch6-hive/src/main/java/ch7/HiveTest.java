@@ -13,11 +13,12 @@ public class HiveTest {
         Connection conn = DriverManager.getConnection(url);
         Statement stmt = conn.createStatement();
         stmt.execute("create table if not exists zzti.students(name string)");
-        stmt.execute("insert into zzti.students values('zs')");
-        stmt.execute("insert into zzti.students values('ls')");
+        stmt.execute("insert into zzti.students values('zs',1)");
+        stmt.execute("insert into zzti.students values('ls',2)");
         ResultSet res = stmt.executeQuery("select * from zzti.students");
         while (res.next()) {
             System.out.println(res.getString("name"));
+            System.out.println(res.getString("id"));
         }
         conn.close();
     }
