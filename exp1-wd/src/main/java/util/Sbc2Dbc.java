@@ -1,3 +1,5 @@
+package util;
+
 public class Sbc2Dbc {
     public static void main(String[] args) {
         String x1 = "~!@#$%^&*()_+{}|:\"<>?[]\\;',./'";

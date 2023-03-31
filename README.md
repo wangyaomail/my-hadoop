@@ -19,4 +19,4 @@
 - ch7-hbase
   - 统计任务
 - exp1-wd
-  - 论坛信息挖掘
+  - 论坛信息挖掘[hive版][hbase版]
