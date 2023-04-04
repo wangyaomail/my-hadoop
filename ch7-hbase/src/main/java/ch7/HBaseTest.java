@@ -1,5 +1,4 @@
 package ch7;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.Admin;
@@ -14,7 +13,6 @@ public class HBaseTest {
         String hadoop_home = "C:\\hadoop\\hadoop-3.x\\hadoop-3.2.2";
         System.setProperty("hadoop.home.dir", hadoop_home);
         System.load(hadoop_home + "/bin/hadoop.dll");
-
         Configuration conf = HBaseConfiguration.create();
 //        for (Map.Entry<String, String> entry : conf) {
 //            System.out.println("[" + entry.getKey() + "]:" + entry.getValue());
@@ -23,8 +21,6 @@ public class HBaseTest {
         Admin admin = conn.getAdmin();
         System.out.println(admin.getRegionServers());
         System.out.println(admin.getClusterMetrics());
-
         conn.close();
-
     }
 }

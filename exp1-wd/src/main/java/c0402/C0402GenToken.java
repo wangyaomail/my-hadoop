@@ -1,6 +1,8 @@
-package ch7;
+package c0402;
+import org.ansj.domain.Term;
+import org.ansj.splitWord.analysis.ToAnalysis;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.CellUtil;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.TableName;
@@ -17,40 +19,55 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
-import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import util.CountMap;
 
 import java.io.IOException;
+import java.util.Map;
 
-public class CH723AgeGenerate {
+public class C0402GenToken {
     public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
-        String hadoop_home = "C:\\hadoop\\hadoop-3.x\\hadoop-3.2.2";
+        String hadoop_home = "C:\\hadoop\\hadoop-3.2.2";
         System.setProperty("hadoop.home.dir", hadoop_home);
         System.load(hadoop_home + "/bin/hadoop.dll");
         Configuration conf = HBaseConfiguration.create();
         Job job = Job.getInstance(conf, "myjob");
-        job.setJarByClass(CH723AgeGenerate.class);
+        job.setJarByClass(C0402GenToken.class);
         Scan scan = new Scan();
-        scan.addColumn(Bytes.toBytes("data"), Bytes.toBytes("birthday"));
-        TableMapReduceUtil.initTableMapperJob(TableName.valueOf("students"), scan, MyMapper.class, Text.class, Text.class, job);
-        TableMapReduceUtil.initTableReducerJob("students_age", MyReducer.class, job);
+        scan.addColumn(Bytes.toBytes("data"), Bytes.toBytes("content"));
+        TableMapReduceUtil.initTableMapperJob(TableName.valueOf("qa"), scan, MyMapper.class, Text.class, Text.class, job);
+        TableMapReduceUtil.initTableReducerJob("qa", MyReducer.class, job);
         System.exit(job.waitForCompletion(true) ? 0 : 1);
+    }
+    private static String cell2String(Result value, String qualifier) {
+        return Bytes.toString(CellUtil.cloneValue(value.getColumnLatestCell(Bytes.toBytes("data"), Bytes.toBytes(qualifier))));
     }
     private static class MyMapper extends TableMapper<Text, Text> {
         @Override
         protected void map(ImmutableBytesWritable key, Result value, Mapper<ImmutableBytesWritable, Result, Text, Text>.Context context) throws IOException, InterruptedException {
-            String birthday = Bytes.toString(CellUtil.cloneValue(value.getColumnLatestCell(Bytes.toBytes("data"), Bytes.toBytes("birthday"))));
-            Integer year = Integer.parseInt(birthday.split("-")[0]);
-            Integer age = 2022 - year;
-            context.write(new Text(Bytes.toString(value.getRow())), new Text(age + ""));
+            String content = cell2String(value, "content");
+            if (StringUtils.isNoneEmpty(content)) {
+                CountMap<String> wordMap = new CountMap<>();
+                org.ansj.domain.Result result = ToAnalysis.parse(content);
+                for (Term term : result.getTerms()) {
+                    if (term.getName().length() > 1) {
+                        wordMap.add(term.getName());
+                    }
+                }
+                context.write(new Text(Bytes.toString(key.get())),
+                        new Text(wordMap.toString()));
+            }
         }
     }
 
     private static class MyReducer extends TableReducer<Text, Text, ImmutableBytesWritable> {
         @Override
         protected void reduce(Text key, Iterable<Text> values, Reducer<Text, Text, ImmutableBytesWritable, Mutation>.Context context) throws IOException, InterruptedException {
-            Put put = new Put(Bytes.toBytes(key.toString()));
-            put.addColumn(Bytes.toBytes("data"), Bytes.toBytes("age"), Bytes.toBytes(values.iterator().next().toString()));
-            context.write(new ImmutableBytesWritable(), put);
+            for (Text val : values) {
+                Put put = new Put(Bytes.toBytes(key.toString()));
+                put.addColumn(Bytes.toBytes("data"), Bytes.toBytes("token"),
+                        Bytes.toBytes(val.toString()));
+                context.write(new ImmutableBytesWritable(), put);
+            }
         }
     }
 }

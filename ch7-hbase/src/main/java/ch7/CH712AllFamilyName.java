@@ -1,5 +1,4 @@
 package ch7;
-
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.ResultScanner;
@@ -26,9 +25,7 @@ public class CH712AllFamilyName extends CH701HBaseBase {
         System.out.println(familyNames);
         conn.close();
     }
-
     public static void main(String[] args) throws IOException {
         new CH712AllFamilyName().run();
-
     }
 }

@@ -1,5 +1,4 @@
 package ch7;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.CellUtil;
@@ -23,28 +22,22 @@ import java.io.IOException;
 
 public class CH731GenderMore {
     public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
-
         String hadoop_home = "C:\\hadoop\\hadoop-3.x\\hadoop-3.2.2";
         System.setProperty("hadoop.home.dir", hadoop_home);
         System.load(hadoop_home + "/bin/hadoop.dll");
-
         Configuration conf = HBaseConfiguration.create();
         Job job = Job.getInstance(conf, "myjob");
         job.setJarByClass(CH731GenderMore.class);
         job.setReducerClass(MyReducer.class);
         Scan scan = new Scan();
         scan.addColumn(Bytes.toBytes("data"), Bytes.toBytes("gender"));
-
         FileOutputFormat.setOutputPath(job, new Path("/gendermore2"));
-
         TableMapReduceUtil.initTableMapperJob(TableName.valueOf("students"), scan, MyMapper.class, Text.class, Text.class, job);
         System.exit(job.waitForCompletion(true) ? 0 : 1);
     }
-
     private static class MyMapper extends TableMapper<Text, Text> {
         int maxScore = 0;
         int minScore = 0;
-
         @Override
         protected void map(ImmutableBytesWritable key, Result value, Mapper<ImmutableBytesWritable, Result, Text, Text>.Context context) throws IOException, InterruptedException {
             String gender = Bytes.toString(CellUtil.cloneValue(value.getColumnLatestCell(Bytes.toBytes("data"), Bytes.toBytes("gender"))));
@@ -54,7 +47,6 @@ public class CH731GenderMore {
                 minScore++;
             }
         }
-
         @Override
         protected void cleanup(Mapper<ImmutableBytesWritable, Result, Text, Text>.Context context) throws IOException, InterruptedException {
             context.write(new Text("1"), new Text(maxScore + "," + minScore));

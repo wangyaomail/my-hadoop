@@ -1,5 +1,4 @@
 package ch7;
-
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Table;
@@ -37,7 +36,6 @@ public class CH710ImportStudensData extends CH701HBaseBase {
         table.put(putList);
         conn.close();
     }
-
     public static void main(String[] args) throws IOException {
         new CH710ImportStudensData().run();
     }

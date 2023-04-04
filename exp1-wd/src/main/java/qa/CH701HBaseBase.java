@@ -1,4 +1,5 @@
-package ch7;
+package qa;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.ClusterMetrics;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -12,12 +13,15 @@ import java.util.Map;
 
 public class CH701HBaseBase {
     public static String hadoopLocalHome = "C:\\hadoop\\hadoop-3.2.2";
+
     static {
         System.setProperty("hadoop.home.dir", hadoopLocalHome);
         System.load(hadoopLocalHome + "/bin/hadoop.dll");
     }
+
     public Connection conn = null;
     public Admin admin = null;
+
     public CH701HBaseBase() {
         try {
             Configuration conf = HBaseConfiguration.create();
@@ -32,10 +36,12 @@ public class CH701HBaseBase {
             System.exit(-1);
         }
     }
+
     public void run() throws IOException {
         ClusterMetrics metrics = admin.getClusterMetrics();
         System.out.println(metrics);
     }
+
     public static void main(String[] args) throws IOException {
         new CH701HBaseBase().run();
     }

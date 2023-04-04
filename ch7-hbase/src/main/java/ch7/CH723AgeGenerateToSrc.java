@@ -1,5 +1,4 @@
 package ch7;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.CellUtil;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -22,26 +21,19 @@ import java.io.IOException;
 
 public class CH723AgeGenerateToSrc {
     public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
-
         String hadoop_home = "C:\\hadoop\\hadoop-3.x\\hadoop-3.2.2";
         System.setProperty("hadoop.home.dir", hadoop_home);
         System.load(hadoop_home + "/bin/hadoop.dll");
-
         Configuration conf = HBaseConfiguration.create();
         Job job = Job.getInstance(conf, "myjob");
         job.setJarByClass(CH723AgeGenerateToSrc.class);
-
         Scan scan = new Scan();
         scan.addColumn(Bytes.toBytes("data"), Bytes.toBytes("birthday"));
-
-
         TableMapReduceUtil.initTableMapperJob(TableName.valueOf("students"), scan, MyMapper.class, Text.class, Text.class, job);
         TableMapReduceUtil.initTableReducerJob("students", MyReducer.class, job);
         System.exit(job.waitForCompletion(true) ? 0 : 1);
     }
-
     private static class MyMapper extends TableMapper<Text, Text> {
-
         @Override
         protected void map(ImmutableBytesWritable key, Result value, Mapper<ImmutableBytesWritable, Result, Text, Text>.Context context) throws IOException, InterruptedException {
             String birthday = Bytes.toString(CellUtil.cloneValue(value.getColumnLatestCell(Bytes.toBytes("data"), Bytes.toBytes("birthday"))));
@@ -49,7 +41,6 @@ public class CH723AgeGenerateToSrc {
             Integer age = 2022 - year;
             context.write(new Text(Bytes.toString(value.getRow())), new Text(age + ""));
         }
-
     }
 
     private static class MyReducer extends TableReducer<Text, Text, ImmutableBytesWritable> {
@@ -60,5 +51,4 @@ public class CH723AgeGenerateToSrc {
             context.write(new ImmutableBytesWritable(), put);
         }
     }
-
 }

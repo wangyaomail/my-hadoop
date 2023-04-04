@@ -1,5 +1,4 @@
 package ch7;
-
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.ColumnFamilyDescriptor;
 import org.apache.hadoop.hbase.client.ColumnFamilyDescriptorBuilder;
@@ -11,7 +10,6 @@ import java.util.Arrays;
 
 public class CH702CreateTable extends CH701HBaseBase {
     TableName tableName = TableName.valueOf("students");
-
     @Override
     public void run() throws IOException {
         TableDescriptorBuilder builder = TableDescriptorBuilder.newBuilder(tableName);
@@ -22,7 +20,6 @@ public class CH702CreateTable extends CH701HBaseBase {
         System.out.println(Arrays.asList(admin.listTableNames()));
         conn.close();
     }
-
     public static void main(String[] args) throws IOException {
         new CH702CreateTable().run();
     }
