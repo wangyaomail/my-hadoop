@@ -23,6 +23,7 @@
         <module>ch5-yarn</module>
         <module>ch6-hive</module>
         <module>ch7-hbase</module>
+        <module>ch8-zookeeper</module>
         <module>exp1-wd</module>
     </modules>
 
