@@ -41,17 +41,31 @@
 
     <repositories>
         <repository>
-            <id>localrepo</id>
-            <url>file://${user.home}/.m2/repository</url>
+            <id>local</id>
+            <url>file://${user.home}/.m2/repository/</url>
         </repository>
         <repository>
-            <id>alimaven</id>
-            <url>https://maven.aliyun.com/repository/central</url>
+            <id>central</id>
+            <url>https://maven.aliyun.com/repository/central/</url>
         </repository>
+        <repository>
+            <id>jcenter</id>
+            <url>https://maven.aliyun.com/repository/public/</url>
+        </repository>
+        <repository>
+            <id>gradle-plugin</id>
+            <url>https://maven.aliyun.com/repository/gradle-plugin/</url>
+        </repository>
+        <repository>
+            <id>google</id>
+            <url>https://maven.aliyun.com/repository/google/</url>
+        </repository>
+        <!--
         <repository>
             <id>central</id>
             <url>https://repo1.maven.org/maven2/</url>
         </repository>
+        -->
     </repositories>
 
 </project>
