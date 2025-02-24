@@ -25,6 +25,7 @@
         <module>ch7-hbase</module>
         <module>ch8-zookeeper</module>
         <module>exp1-wd</module>
+        <module>exp2-zhwiki</module>
     </modules>
 
     <properties>

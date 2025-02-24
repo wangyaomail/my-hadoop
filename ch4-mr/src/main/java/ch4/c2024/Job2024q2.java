@@ -16,7 +16,6 @@ import java.io.IOException;
  */
 public class Job2024q2 {
     static class MyMapper extends Mapper<LongWritable, Text, Text, Text> {
-        @Override
         protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, Text, Text>.Context context) throws IOException, InterruptedException {
             String[] toks = value.toString().trim().split("\t");
             if (toks.length == 8) {
@@ -26,7 +25,6 @@ public class Job2024q2 {
     }
 
     static class MyReduce extends Reducer<Text, Text, Text, Text> {
-        @Override
         protected void reduce(Text key, Iterable<Text> values, Reducer<Text, Text, Text, Text>.Context context) throws IOException, InterruptedException {
             int count = 0;
             for (Text val : values) {
