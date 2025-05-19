@@ -15,9 +15,10 @@ public class Hive1 {
 
 //        stmt.execute("insert into zzti.students values('zhangsan')");
 
-        ResultSet rs = stmt.executeQuery("select * from zzti.students");
+        ResultSet rs = stmt.executeQuery("select * from zzti.stu2");
         while (rs.next()) {
             System.out.println(rs.getString("name"));
+            System.out.println(rs.getString("score"));
         }
 
         conn.close();
