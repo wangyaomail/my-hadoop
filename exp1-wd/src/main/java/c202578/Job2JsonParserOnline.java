@@ -1,0 +1,60 @@
+package c202578;
+import com.alibaba.fastjson.JSONObject;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.NullWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+
+import java.io.IOException;
+
+public class Job2JsonParserOnline {
+    static class MyMapper extends Mapper<LongWritable, Text, Text, NullWritable> {
+        @Override
+        protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, Text, NullWritable>.Context context) throws IOException, InterruptedException {
+            JSONObject jsobj = JSONObject.parseObject(value.toString());
+            //qid、title、topic、star、content、answer_id、answerer_tags
+            StringBuilder sb = new StringBuilder();
+            sb.append(jsobj.getString("qid")).append("\t");
+            sb.append(jsobj.getString("title")).append("\t");
+            sb.append(jsobj.getString("topic")).append("\t");
+            sb.append(jsobj.getString("star")).append("\t");
+            sb.append(jsobj.getString("content")).append("\t");
+            sb.append(jsobj.getString("answer_id")).append("\t");
+            sb.append(jsobj.getString("answerer_tags"));
+            context.write(new Text(sb.toString()), NullWritable.get());
+        }
+    }
+
+//    static class MyReducer extends Reducer<Text, Text, Text, Text> {
+//        @Override
+//        protected void reduce(Text key, Iterable<Text> values, Reducer<Text, Text, Text, Text>.Context context) throws IOException, InterruptedException {
+//            for (Text val : values) {
+//                //
+//            }
+//        }
+//    }
+    public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
+        String hadoop_home = "C:\\hadoop\\hadoop-3.2.2";
+        System.setProperty("hadoop.home.dir", hadoop_home);
+        System.load(hadoop_home + "/bin/hadoop.dll");
+
+        Configuration conf = new Configuration();
+        Job job = Job.getInstance(conf, Job2JsonParserOnline.class.getSimpleName());
+        job.setJarByClass(Job2JsonParserOnline.class);
+        job.setMapperClass(MyMapper.class);
+        job.setNumReduceTasks(0);
+//        job.setReducerClass(MyReducer.class);
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(NullWritable.class);
+//        job.setOutputKeyClass(Text.class);
+//        job.setOutputValueClass(Text.class);
+        FileInputFormat.addInputPath(job, new Path("/exp101"));
+        FileOutputFormat.setOutputPath(job, new Path("/c56j1b"));
+        System.exit(job.waitForCompletion(true) ? 0 : 1);
+    }
+}

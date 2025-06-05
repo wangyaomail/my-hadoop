@@ -48,7 +48,7 @@ public class Exp205InvertIndex {
     }
 
     public static void main(String[] args) throws Exception {
-        String hadoop_home = "C:\\hadoop\\hadoop-3.x\\hadoop-3.2.2";
+        String hadoop_home = "C:\\hadoop\\hadoop-3.2.2";
         System.setProperty("hadoop.home.dir", hadoop_home);
         System.load(hadoop_home + "/bin/hadoop.dll");
         if (checkAndCreateTable(_table_name_1) && checkAndCreateTable(_table_name_2)) {
@@ -59,6 +59,7 @@ public class Exp205InvertIndex {
             List<Scan> scans = new ArrayList<>();
             Scan scan = new Scan();
             scan.addColumn(Bytes.toBytes("data"), Bytes.toBytes("toks"));
+            scan.addColumn(Bytes.toBytes("data"), Bytes.toBytes("title"));
             scan.setCaching(200);
             scan.setCacheBlocks(false);
             scan.setAttribute(Scan.SCAN_ATTRIBUTES_TABLE_NAME, _table_name_1);
@@ -72,12 +73,13 @@ public class Exp205InvertIndex {
     static class MyMapper extends TableMapper<Text, Text> {
         protected void map(ImmutableBytesWritable key, Result columns, Context context) throws IOException, InterruptedException {
             Cell cell = columns.getColumnLatestCell(Bytes.toBytes("data"), Bytes.toBytes("toks"));
+            Cell cellt = columns.getColumnLatestCell(Bytes.toBytes("data"), Bytes.toBytes("title"));
             if (cell != null) {
                 String toks = Bytes.toString(CellUtil.cloneValue(cell));
                 for (String tok : toks.split(",")) {
                     String[] wordCount = tok.split(":");
                     if (wordCount.length == 2) {
-                        context.write(new Text(wordCount[0]), new Text(columns.getRow()));
+                        context.write(new Text(wordCount[0]), new Text(Bytes.toString(CellUtil.cloneValue(cellt))));
                     }
                 }
             }

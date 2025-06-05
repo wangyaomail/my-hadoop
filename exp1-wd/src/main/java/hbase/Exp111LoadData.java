@@ -30,35 +30,42 @@ public class Exp111LoadData {
         Configuration conf = HBaseConfiguration.create();
         Connection conn = ConnectionFactory.createConnection(conf);
 
-        String fileName = "E:\\data\\nlp_chinese_corpus\\webtext2019zh\\web_text_zh_test.json";
+        String fileName = "C:\\share\\data\\webtext2019zh\\web_text_zh_train.json";
         BufferedReader br = new BufferedReader(new FileReader(fileName));
         Table table = conn.getTable(TableName.valueOf("qa"));
         String line = null;
-        List<Put> putList = new ArrayList<>();
-        while ((line = br.readLine()) != null) {
-            JSONObject json = JSONObject.parseObject(line.trim());
-            String qid = cleanInputString(json.getString("qid"));
-            String star = cleanInputString(json.getString("star"));
-            String answer_id = cleanInputString(json.getString("answer_id"));
-            String title = cleanInputString(json.getString("title"));
-            String desc = cleanInputString(json.getString("desc"));
-            String topic = cleanInputString(cleanInputString("topic"));
-            String content = cleanInputString(json.getString("content"));
-            String answerer_tags = cleanInputString(json.getString("answerer_tags"));
-            if (StringUtils.isNotEmpty(qid) && StringUtils.isNotEmpty(answer_id)) {
-                Put put = new Put(Bytes.toBytes(qid + "_" + answer_id));
-                put.addColumn(Bytes.toBytes("data"), Bytes.toBytes("qid"), Bytes.toBytes(qid));
-                put.addColumn(Bytes.toBytes("data"), Bytes.toBytes("title"), Bytes.toBytes(title));
-                put.addColumn(Bytes.toBytes("data"), Bytes.toBytes("star"), Bytes.toBytes(star));
-                put.addColumn(Bytes.toBytes("data"), Bytes.toBytes("topic"), Bytes.toBytes(topic));
-                put.addColumn(Bytes.toBytes("data"), Bytes.toBytes("content"), Bytes.toBytes(content));
-                put.addColumn(Bytes.toBytes("data"), Bytes.toBytes("answer_id"), Bytes.toBytes(answer_id));
-                put.addColumn(Bytes.toBytes("data"), Bytes.toBytes("answerer_tags"), Bytes.toBytes(answerer_tags));
-                put.addColumn(Bytes.toBytes("data"), Bytes.toBytes("desc"), Bytes.toBytes(desc));
-                putList.add(put);
+        for(int i=0;i<1000;i++) {
+            System.out.println(i);
+            List<Put> putList = new ArrayList<>();
+            int count = 0;
+            while ((line = br.readLine()) != null) {
+                if (count > 1000) {
+                    break;
+                }
+                JSONObject json = JSONObject.parseObject(line.trim());
+                String qid = cleanInputString(json.getString("qid"));
+                String star = cleanInputString(json.getString("star"));
+                String answer_id = cleanInputString(json.getString("answer_id"));
+                String title = cleanInputString(json.getString("title"));
+                String desc = cleanInputString(json.getString("desc"));
+                String topic = cleanInputString(cleanInputString("topic"));
+                String content = cleanInputString(json.getString("content"));
+                String answerer_tags = cleanInputString(json.getString("answerer_tags"));
+                if (StringUtils.isNotEmpty(qid) && StringUtils.isNotEmpty(answer_id)) {
+                    Put put = new Put(Bytes.toBytes(qid + "_" + answer_id));
+                    put.addColumn(Bytes.toBytes("data"), Bytes.toBytes("qid"), Bytes.toBytes(qid));
+                    put.addColumn(Bytes.toBytes("data"), Bytes.toBytes("title"), Bytes.toBytes(title));
+                    put.addColumn(Bytes.toBytes("data"), Bytes.toBytes("star"), Bytes.toBytes(star));
+                    put.addColumn(Bytes.toBytes("data"), Bytes.toBytes("topic"), Bytes.toBytes(topic));
+                    put.addColumn(Bytes.toBytes("data"), Bytes.toBytes("content"), Bytes.toBytes(content));
+                    put.addColumn(Bytes.toBytes("data"), Bytes.toBytes("answer_id"), Bytes.toBytes(answer_id));
+                    put.addColumn(Bytes.toBytes("data"), Bytes.toBytes("answerer_tags"), Bytes.toBytes(answerer_tags));
+                    put.addColumn(Bytes.toBytes("data"), Bytes.toBytes("desc"), Bytes.toBytes(desc));
+                    putList.add(put);
+                }
             }
+            table.put(putList);
         }
-        table.put(putList);
         conn.close();
 
     }

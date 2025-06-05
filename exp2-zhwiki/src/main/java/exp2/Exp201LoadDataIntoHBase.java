@@ -53,7 +53,7 @@ public class Exp201LoadDataIntoHBase {
     }
 
     public static void main(String[] args) throws Exception {
-        String hadoop_home = "C:\\hadoop\\hadoop-3.x\\hadoop-3.2.2";
+        String hadoop_home = "C:\\hadoop\\hadoop-3.2.2";
         System.setProperty("hadoop.home.dir", hadoop_home);
         System.load(hadoop_home + "/bin/hadoop.dll");
         // 首先检查待写入的表是否存在，不存在的话新建

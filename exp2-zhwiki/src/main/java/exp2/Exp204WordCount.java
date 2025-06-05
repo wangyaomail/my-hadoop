@@ -47,7 +47,7 @@ public class Exp204WordCount {
     }
 
     public static void main(String[] args) throws Exception {
-        String hadoop_home = "C:\\hadoop\\hadoop-3.x\\hadoop-3.2.2";
+        String hadoop_home = "C:\\hadoop\\hadoop-3.2.2";
         System.setProperty("hadoop.home.dir", hadoop_home);
         System.load(hadoop_home + "/bin/hadoop.dll");
         if (checkAndCreateTable(_table_name_1) && checkAndCreateTable(_table_name_2)) {
