@@ -1,6 +1,7 @@
-package ch4.c2026.c56;
+package ch4.c2026.c34;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
@@ -11,53 +12,47 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 import java.io.IOException;
 
-public class Job20260410J3MAXMIN {
+public class Job20260410J3最高最低分 {
     static class MyMapper extends Mapper<LongWritable, Text, Text, Text> {
-        int max,min;
-        @Override
-        protected void setup(Mapper<LongWritable, Text, Text, Text>.Context context) throws IOException, InterruptedException {
-            super.setup(context);
-            max=0;
-            min=100;
-        }
-
+        int max=0;
+        int min = 100;
         @Override
         protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, Text, Text>.Context context) throws IOException, InterruptedException {
             String[] toks = value.toString().trim().split("\t");
             if(toks.length==8){
                 int score = Integer.parseInt(toks[7]);
-                if(max<score){
-                    max=score;
+                if(score < min){
+                    min = score;
                 }
-                if(min>score){
-                    min=score;
+                if(score > max){
+                    max = score;
                 }
             }
         }
 
         @Override
         protected void cleanup(Mapper<LongWritable, Text, Text, Text>.Context context) throws IOException, InterruptedException {
-            context.write(new Text("a"), new Text(String.valueOf(max)));
-            context.write(new Text("a"), new Text(String.valueOf(min)));
+            context.write(new Text("1"), new Text(max+""));
+            context.write(new Text("1"), new Text(min+""));
+
         }
     }
 
     static class MyReducer extends Reducer<Text, Text, Text, Text> {
         @Override
         protected void reduce(Text key, Iterable<Text> values, Reducer<Text, Text, Text, Text>.Context context) throws IOException, InterruptedException {
-            int max=0;
-            int min=100;
-            for (Text val : values) {
-                int score = Integer.parseInt(val.toString());
-                if(max<score){
-                    max=score;
+            int max = 0,min = 100;
+            for(Text val : values){
+                if(max<Integer.parseInt(val.toString())){
+                    max = Integer.parseInt(val.toString());
                 }
-                if(min>score){
-                    min=score;
+                if(min>Integer.parseInt(val.toString())){
+                    min = Integer.parseInt(val.toString());
                 }
             }
             context.write(new Text("最大值"), new Text(max+""));
             context.write(new Text("最小值"), new Text(min+""));
+
         }
     }
     public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
@@ -66,8 +61,8 @@ public class Job20260410J3MAXMIN {
         System.load(hadoop_home + "/bin/hadoop.dll");
 
         Configuration conf = new Configuration();
-        Job job = Job.getInstance(conf, Job20260410J3MAXMIN.class.getSimpleName());
-        job.setJarByClass(Job20260410J3MAXMIN.class);
+        Job job = Job.getInstance(conf, Job20260410J3最高最低分.class.getSimpleName());
+        job.setJarByClass(Job20260410J3最高最低分.class);
         job.setMapperClass(MyMapper.class);
         job.setReducerClass(MyReducer.class);
         job.setMapOutputKeyClass(Text.class);
@@ -75,7 +70,7 @@ public class Job20260410J3MAXMIN {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
         FileInputFormat.addInputPath(job, new Path("C:\\nos\\my-hadoop\\data\\students_10w.data"));
-        FileOutputFormat.setOutputPath(job, new Path("C:\\nos\\my-hadoop\\output\\"+ Job20260410J3MAXMIN.class.getSimpleName()));
+        FileOutputFormat.setOutputPath(job, new Path("C:\\nos\\my-hadoop\\output\\"+ Job20260410J3最高最低分.class.getSimpleName()));
         System.exit(job.waitForCompletion(true) ? 0 : 1);
     }
 }
