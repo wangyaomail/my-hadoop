@@ -11,14 +11,15 @@ public class Hive1 {
         String url = "jdbc:hive2://192.168.17.150:10000/zzti";
         Connection conn = DriverManager.getConnection(url);
         Statement stmt = conn.createStatement();
+
 //        stmt.execute("create table if not exists zzti.students(name string)");
 
 //        stmt.execute("insert into zzti.students values('zhangsan')");
 
-        ResultSet rs = stmt.executeQuery("select * from zzti.stu2");
+        ResultSet rs = stmt.executeQuery("select * from zzti.students");
         while (rs.next()) {
-            System.out.println(rs.getString("name"));
-            System.out.println(rs.getString("score"));
+            System.out.println(rs.getString("a"));
+            System.out.println(rs.getString("b"));
         }
 
         conn.close();

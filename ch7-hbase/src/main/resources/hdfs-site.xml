@@ -38,7 +38,7 @@
   <value>true</value>
 </property>
 <property>
-  <name>dfs.permission</name>
+  <name>dfs.permission.enabled</name>
   <value>false</value>
 </property>
 <property>

@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public class CH702CreateTable extends CH701HBaseBase {
-    TableName tableName = TableName.valueOf("students");
+    TableName tableName = TableName.valueOf("aaa");
     @Override
     public void run() throws IOException {
         TableDescriptorBuilder builder = TableDescriptorBuilder.newBuilder(tableName);
