@@ -1,8 +1,6 @@
 package c202634;
 
-import c202312.HBaseMR2;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.CellUtil;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -19,13 +17,12 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
-import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HBase4MR2 {
+public class HBase5MRGenderDiff {
     public static void main(String[] args) throws Exception {
 
         String hadoop_home = "C:\\hadoop\\hadoop-3.2.2";
@@ -36,23 +33,16 @@ public class HBase4MR2 {
 
 
         Configuration conf = HBaseConfiguration.create();
-
         Job job = Job.getInstance(conf, "mr1");
-
-        job.setJarByClass(HBase4MR2.class);
+        job.setJarByClass(HBase5MRGenderDiff.class);
         job.setMapperClass(MyMapper.class);
-
         List<Scan> scans = new ArrayList<Scan>();
         Scan scan = new Scan();
-        scan.addColumn(Bytes.toBytes("data"), Bytes.toBytes("name"));
-        scan.addColumn(Bytes.toBytes("data"), Bytes.toBytes("birthday"));
-
+        scan.addColumn(Bytes.toBytes("data"), Bytes.toBytes("gender"));
         scan.setCaching(200);
         scan.setCacheBlocks(false);
         scan.setAttribute(Scan.SCAN_ATTRIBUTES_TABLE_NAME, Bytes.toBytes("students"));
         scans.add(scan);
-
-
         TableMapReduceUtil.initTableMapperJob(
                 scans,
                 MyMapper.class,
@@ -61,36 +51,54 @@ public class HBase4MR2 {
                 job);
 
         TableMapReduceUtil.initTableReducerJob(
-                "students",
+                "result",
                 MyReducer.class,
                 job);
 
         System.exit(job.waitForCompletion(true) ? 0 : 1);
     }
     static byte[] _family = Bytes.toBytes("data");
-    static byte[] _q_name = Bytes.toBytes("name");
+    static byte[] _sid = Bytes.toBytes("sid");
+    static byte[] _name = Bytes.toBytes("name");
     static byte[] _birthday = Bytes.toBytes("birthday");
+    static byte[] _clazz = Bytes.toBytes("clazz");
+    static byte[] _gender = Bytes.toBytes("gender");
+    static byte[] _loc = Bytes.toBytes("loc");
+    static byte[] _phone = Bytes.toBytes("phone");
+    static byte[] _score = Bytes.toBytes("score");
 
     private static class MyMapper extends TableMapper<Text, Text> {
+        int diff = 0;
         @Override
         protected void map(ImmutableBytesWritable key, Result value, Mapper<ImmutableBytesWritable, Result, Text, Text>.Context context) throws IOException, InterruptedException {
-            Cell nameCell = value.getColumnLatestCell(_family, _q_name);
-            Cell birthCell = value.getColumnLatestCell(_family, _birthday);
-            if (nameCell!= null&&birthCell != null) {
-//                String name = Bytes.toString(CellUtil.cloneValue(nameCell));
-                String birthday = Bytes.toString(CellUtil.cloneValue(birthCell));
-                int age = 2026-Integer.parseInt(birthday.substring(0,4));
-                String sid = Bytes.toString(CellUtil.cloneRow(birthCell));
-                context.write(new Text(sid), new Text(age+""));
+            Cell genderCell = value.getColumnLatestCell(_family, _gender);
+            if (genderCell!= null) {
+                String gender = Bytes.toString(CellUtil.cloneValue(genderCell));
+                if(gender.equals("男")){
+                    diff++;
+                } else{
+                    diff--;
+                }
             }
+        }
+
+        @Override
+        protected void cleanup(Mapper<ImmutableBytesWritable, Result, Text, Text>.Context context) throws IOException, InterruptedException {
+            context.write(new Text("1"),new Text(""+diff));
         }
     }
 
     private static class MyReducer extends TableReducer<Text, Text, ImmutableBytesWritable> {
         @Override
         protected void reduce(Text key, Iterable<Text> values, Reducer<Text, Text, ImmutableBytesWritable, Mutation>.Context context) throws IOException, InterruptedException {
-            Put put = new Put(Bytes.toBytes(key.toString()));
-            put.addColumn(Bytes.toBytes("data"), Bytes.toBytes("birthday"), Bytes.toBytes(values.iterator().next().toString()));
+            int diff = 0;
+            for(Text value : values){
+                diff += Integer.parseInt(value.toString());
+            }
+            Put put = new Put(Bytes.toBytes("gender"));
+            put.addColumn(_family,
+                    Bytes.toBytes("diff"),
+                    Bytes.toBytes(diff + ""));
             context.write(new ImmutableBytesWritable(), put);
         }
     }
