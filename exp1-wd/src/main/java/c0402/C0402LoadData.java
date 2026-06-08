@@ -22,7 +22,7 @@ public class C0402LoadData {
         Configuration conf = HBaseConfiguration.create();
         Connection conn = ConnectionFactory.createConnection(conf);
         Table table = conn.getTable(TableName.valueOf("qa"));
-        BufferedReader br = new BufferedReader(new FileReader("C:\\share\\data\\webtext2019zh\\web_text_zh_testa.json"));
+        BufferedReader br = new BufferedReader(new FileReader("C:\\share\\data\\webtext2019zh\\web_text_zh_test.json"));
         String line = null;
         ArrayList<Put> putList = new ArrayList<>();
         while ((line = br.readLine()) != null) {
